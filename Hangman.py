@@ -3,52 +3,70 @@ Created on May 25, 2017
 
 @author: davidshaw
 '''
+
 from random import randrange
 from string import *
 
-# Import hangman words
+import sys
 
-WORDLIST_FILENAME = "words.txt"
-
-def load_words():
-    """
-    Returns a list of valid words. Words are strings of lowercase letters.
-    
-    Depending on the size of the word list, this function may
-    take a while to finish.
-    """
-    print "Loading word list from file..."
-    # inFile: file
-    inFile = open(WORDLIST_FILENAME, 'r', 0)
-    # line: string
-    line = inFile.readline()
-    # wordlist: list of strings
-    wordlist = split(line)
-    print "  ", len(wordlist), "words loaded."
-    print 'Enter play_hangman() to play a game of hangman!'
-    return wordlist
-
-# actually load the dictionary of words and point to it with 
-# the words_dict variable so that it can be accessed from anywhere
-# in the program
-words_dict = load_words()
-
-
-# Run get_word() within your program to generate a random secret word
-# by using a line like this within your program:
-# secret_word = get_word()
+################################################################################
+# Helper Functions
+################################################################################
 
 def get_word():
     """
-    Returns a random word from the word list
+    Args:
+        None
+        
+    Retuns:
+        word (str): A random word from the word list
+
+    Notes:
+        If the word list has not been loaded then load it
     """
-    word=words_dict[randrange(0,len(words_dict))]
+
+    wordlist_file = "words.txt"
+
+    def load_words():
+        """
+        Args:
+            None
+
+        Returns:
+            word_list ([str]): A list of valid words. Words are strings of 
+                               lowercase letters.
+
+        Notes:
+            Depending on the size of the word list, this function may
+            take a while to finish.
+        """
+
+        print "Loading word list from file..."
+
+        wordlist = None
+        with open(wordlist_file) as file_handle:
+            line = file_handle.readline()
+            wordlist = line.split()
+
+        print "  ", len(wordlist), "words loaded."
+
+        return wordlist
+
+    # Actually load the dictionary of words and point to it with 
+    # the words_dict variable so that it can be accessed from anywhere
+    # in the program
+    words_dict = load_words()
+
+    # Run get_word() within your program to generate a random secret word
+    # by using a line like this within your program:
+    # secret_word = get_word()
+
+    word = words_dict[randrange(0, len(words_dict) - 1)]
+    
     return word
 
 secret_word = get_word()
 letters_guessed = []
-
-
 
 def word_guessed():
     answer = True
@@ -94,6 +112,18 @@ def play_hangman():
         else:
             num_guesses -= 1
         
-get_word()
-play_hangman()
 
+################################################################################
+# main()
+################################################################################
+
+def main():
+    get_word()
+    play_hangman()
+
+################################################################################
+# __name__ == '__main__'
+################################################################################
+
+if __name__ == "__main__":
+    main()
